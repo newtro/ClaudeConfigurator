@@ -8,6 +8,10 @@ on:
       - 'v*'
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: claude-config-manager
+
 jobs:
   build:
     permissions:
@@ -53,6 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          projectPath: claude-config-manager
           tagName: v__VERSION__
           releaseName: 'Claude Config Manager v__VERSION__'
           releaseBody: 'See the assets below to download and install this version.'
