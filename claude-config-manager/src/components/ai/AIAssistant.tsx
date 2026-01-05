@@ -30,7 +30,7 @@ interface Message {
 }
 
 export function AIAssistant() {
-    const { apiKey, selectedFilePath, setSettingsOpen } = useConfigStore();
+    const { apiKey, selectedFilePath, setSettingsOpen, primaryModel, codingModel } = useConfigStore();
     const [isScanning, setIsScanning] = useState(false);
     const [suggestions, setSuggestions] = useState<HealthIssue[]>([]);
     const [chatInput, setChatInput] = useState('');
@@ -74,7 +74,7 @@ Instructions:
 - Use markdown for formatting.`;
 
             const response = await anthropic.messages.create({
-                model: "claude-3-5-sonnet-20240620",
+                model: primaryModel,
                 max_tokens: 1000,
                 messages: [{ role: "user", content: prompt }],
             });
@@ -82,9 +82,10 @@ Instructions:
             const assistantMessage = (response.content[0] as any).text;
             setChatHistory(prev => [...prev, { role: 'assistant', content: assistantMessage }]);
         } catch (err) {
+            const errorMsg = (err as any).message || (err as any).toString();
             toast({
                 title: "Chat Failed",
-                description: (err as any).toString(),
+                description: errorMsg,
                 variant: "destructive",
             });
         } finally {
@@ -102,7 +103,7 @@ Instructions:
 
             if (issue.id.startsWith('missing-')) {
                 const sectionName = issue.title.replace('Missing ', '').replace(' Section', '');
-                newSection = await generateClaudeMdSection(apiKey, sectionName, "Standard Claude configuration");
+                newSection = await generateClaudeMdSection(apiKey, sectionName, "Standard Claude configuration", codingModel);
 
                 const updatedContent = currentContent.trim() + '\n\n' + newSection.trim();
                 await saveConfigFile(selectedFilePath, updatedContent);
@@ -115,9 +116,10 @@ Instructions:
                 setSuggestions(prev => prev.filter(s => s.id !== issue.id));
             }
         } catch (err) {
+            const errorMsg = (err as any).message || (err as any).toString();
             toast({
                 title: "Application Failed",
-                description: (err as any).toString(),
+                description: errorMsg,
                 variant: "destructive",
             });
         } finally {

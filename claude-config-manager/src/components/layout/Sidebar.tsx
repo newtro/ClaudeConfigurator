@@ -1,14 +1,14 @@
 import { ConfigTree } from '../tree/ConfigTree';
-import { Settings, Sparkles, Moon, Sun, Monitor } from 'lucide-react';
+import { Settings, Sparkles, Moon, Sun, Monitor, FileText } from 'lucide-react';
 import { ApiSettings } from '../settings/ApiSettings';
 import { Button } from '../ui/button';
 import { useConfigStore } from '@/stores/configStore';
 
 export function Sidebar() {
-    const { theme, setTheme, isSettingsOpen, setSettingsOpen } = useConfigStore();
+    const { theme, setTheme, isSettingsOpen, setSettingsOpen, setSelectedFilePath } = useConfigStore();
 
     return (
-        <aside className="w-64 border-r bg-card h-full flex flex-col">
+        <aside className="w-72 shrink-0 border-r bg-card h-full flex flex-col z-10 relative">
             <div className="p-4 border-b flex items-center justify-between bg-muted/20">
                 <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
@@ -27,9 +27,20 @@ export function Sidebar() {
             </div>
             <ConfigTree />
             <div className="p-4 border-t mt-auto flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-wider font-bold">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    v0.1.0 Ready
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-wider font-bold">
+                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        Ready
+                    </div>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-[10px] text-muted-foreground hover:text-foreground hover:bg-muted font-bold uppercase tracking-wider gap-1"
+                        onClick={() => setSelectedFilePath('D:\\Repos\\ClaudeConfigurator\\claude-config-manager\\CONFIG_GUIDE.md')}
+                    >
+                        <FileText className="w-3 h-3" />
+                        Docs
+                    </Button>
                 </div>
                 <Button
                     variant="ghost"

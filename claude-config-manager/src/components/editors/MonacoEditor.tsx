@@ -8,6 +8,7 @@ interface MonacoEditorProps {
     language?: string;
     path?: string;
     options?: any;
+    onMount?: OnMount;
 }
 
 export function MonacoEditor({
@@ -15,6 +16,7 @@ export function MonacoEditor({
     onChange,
     language = "markdown",
     options = {},
+    onMount,
 }: MonacoEditorProps) {
     const editorRef = useRef<any>(null);
 
@@ -28,26 +30,42 @@ export function MonacoEditor({
         // Define theme
         monaco.editor.defineTheme("premium-dark", claudeTheme);
         monaco.editor.setTheme("premium-dark");
+
+        if (onMount) {
+            onMount(editor, monaco);
+        }
     };
 
     return (
-        <Editor
-            height="100%"
-            language={language}
-            value={value}
-            onChange={onChange}
-            onMount={handleEditorDidMount}
-            options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: "on",
-                roundedSelection: true,
-                scrollBeyondLastLine: false,
-                readOnly: false,
-                automaticLayout: true,
-                padding: { top: 16, bottom: 16 },
-                ...options,
-            }}
-        />
+        <div className="h-full w-full overflow-hidden">
+            <Editor
+                height="100%"
+                language={language}
+                value={value}
+                onChange={onChange}
+                onMount={handleEditorDidMount}
+                options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    lineNumbers: "on",
+                    roundedSelection: true,
+                    scrollBeyondLastLine: false,
+                    readOnly: false,
+                    automaticLayout: true,
+                    scrollbar: {
+                        vertical: 'visible',
+                        horizontal: 'visible',
+                        useShadows: false,
+                        verticalHasArrows: false,
+                        horizontalHasArrows: false,
+                        verticalScrollbarSize: 10,
+                        horizontalScrollbarSize: 10,
+                    },
+                    padding: { top: 16, bottom: 16 },
+                    fixedOverflowWidgets: true,
+                    ...options,
+                }}
+            />
+        </div>
     );
 }

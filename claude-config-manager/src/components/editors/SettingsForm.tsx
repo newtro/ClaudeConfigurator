@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MonacoEditor } from './MonacoEditor';
-import { Settings2, Code, Shield } from 'lucide-react';
+import { Settings2, Shield } from 'lucide-react';
 import { PatternBuilder } from './PatternBuilder';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -11,10 +10,10 @@ import { Separator } from '@/components/ui/separator';
 interface SettingsFormProps {
     value: string;
     onChange: (value: string | undefined) => void;
+    view?: 'form' | 'json';
 }
 
-export function SettingsForm({ value, onChange }: SettingsFormProps) {
-    const [activeTab, setActiveTab] = useState<'form' | 'json'>('form');
+export function SettingsForm({ value, onChange, view = 'form' }: SettingsFormProps) {
     const [jsonData, setJsonData] = useState<any>({});
 
     useEffect(() => {
@@ -33,23 +32,8 @@ export function SettingsForm({ value, onChange }: SettingsFormProps) {
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/10">
-                <Tabs value={activeTab} onValueChange={(v: any) => setActiveTab(v)} className="w-[300px]">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="form" className="text-xs">
-                            <Settings2 className="w-3 h-3 mr-2" />
-                            Settings
-                        </TabsTrigger>
-                        <TabsTrigger value="json" className="text-xs">
-                            <Code className="w-3 h-3 mr-2" />
-                            Raw JSON
-                        </TabsTrigger>
-                    </TabsList>
-                </Tabs>
-            </div>
-
             <div className="flex-1 overflow-hidden">
-                {activeTab === 'form' ? (
+                {view === 'form' ? (
                     <ScrollArea className="h-full">
                         <div className="p-6 space-y-8 max-w-2xl mx-auto">
                             <div className="space-y-4">
