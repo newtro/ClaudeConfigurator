@@ -18,12 +18,16 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--target aarch64-apple-darwin'
+            target: 'aarch64-apple-darwin'
           - platform: 'macos-latest'
             args: '--target x86_64-apple-darwin'
+            target: 'x86_64-apple-darwin'
           - platform: 'ubuntu-22.04'
             args: ''
+            target: ''
           - platform: 'windows-latest'
             args: ''
+            target: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -57,7 +61,18 @@ jobs:
           projectPath: claude-config-manager
           tagName: v__VERSION__
           releaseName: 'Claude Config Manager v__VERSION__'
-          releaseBody: 'See the assets below to download and install this version.'
-          releaseDraft: true
+          releaseBody: |
+            ## Downloads
+
+            | Platform | Download |
+            |----------|----------|
+            | Windows | `.msi` or `.exe` installer |
+            | macOS (Apple Silicon) | `_aarch64.dmg` |
+            | macOS (Intel) | `_x64.dmg` |
+            | Linux | `.AppImage` or `.deb` |
+
+            ---
+            See the assets below to download and install this version.
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
